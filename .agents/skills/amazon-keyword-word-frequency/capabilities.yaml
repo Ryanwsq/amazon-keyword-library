@@ -1,0 +1,14 @@
+skill:
+  name: amazon-keyword-word-frequency
+  maturity: draft
+  last_verified: null
+
+capabilities:
+  - id: keyword.library.word-frequency
+    type: manual
+    purpose: 只用Sheet2完整关键词统计并排序单词词频和相邻有序双词词频，在工作簿副本最后新增结果Sheet
+    status: planned
+    input: 已通过第二板块闭环的本地工作簿、唯一Sheet2关键词列和获准输出位置
+    output: 单词词频表、双词词频表、统计口径摘要、数量闭环和本地工作簿副本
+    permission: local-draft
+    risk: 不覆盖原文件；不读取Sheet3/Sheet4；不归并词面；不把频次解释为流量、权重、相关性或SKU精准度

@@ -1,0 +1,22 @@
+skill:
+  name: amazon-keyword-final-workbook-assembly
+  maturity: draft
+  last_verified: null
+
+capabilities:
+  - id: keyword.workbook.final.assemble
+    type: manual
+    purpose: 把三个板块的获准结果装配为Sheet1核心词总表和完整过程Sheet工作簿
+    status: planned
+    input: 三个板块阶段工作簿、稳定Keyword_ID、版本、来源渠道和Sheet清单
+    output: Sheet2核心词最终决策总表、F5唯一主标签、独立竞争/二类词/否词库、品类F1至F3月度搜索量折线图Sheet及所有过程Sheet
+    permission: local-draft
+    risk: 不改变上游判断；竞争明细、Sheet3和Sheet4不得混入Sheet1；不更新飞书或外部系统
+  - id: keyword.workbook.sheet-manifest.verify
+    type: manual
+    purpose: 验证过程Sheet完整性、表名映射、主键、行数和跨板块来源
+    status: planned
+    input: 最终工作簿、各阶段原始Sheet清单和行数基线
+    output: Sheet清单差异、主键闭环、F5唯一性、混入检查、公式扫描、全Sheet渲染和趋势图表区域复核结果
+    permission: local-read-and-verify
+    risk: 过程Sheet缺失或主键冲突时阻断交付

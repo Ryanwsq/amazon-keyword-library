@@ -1,0 +1,4 @@
+interface:
+  display_name: "Amazon Keyword Classification"
+  short_description: "Classify Amazon keywords by ABA traffic and semantic tags"
+  default_prompt: "Classify the locked Sheet2, Sheet3, and Sheet4 keyword populations using the confirmed project rules and preserve unresolved cases for review."

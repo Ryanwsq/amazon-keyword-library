@@ -1,0 +1,13 @@
+skill:
+  name: amazon-keyword-library-publication
+  maturity: draft
+  last_verified: null
+capabilities:
+  - id: keyword.library.publish
+    type: manual
+    purpose: 把已审查且脱敏的项目结论写入现有知识主题并同步索引和状态
+    status: planned
+    input: 写入授权、已复核候选、来源范围、当前知识和排除清单
+    output: 项目知识变更、索引、版本摘要和验证报告
+    permission: repository-write-after-review
+    risk: 不复制原始归档；不把待确认阈值写成稳定规则或把planned能力冒充已执行；不越权修改共享层；不在未授权时commit或push

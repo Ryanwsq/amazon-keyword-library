@@ -1,0 +1,13 @@
+skill:
+  name: amazon-keyword-amazon-autocomplete
+  maturity: draft
+  last_verified: null
+capabilities:
+  - id: keyword.source.autocomplete.capture
+    type: manual
+    purpose: 在Codex内置浏览器固定环境采集主锚点的Amazon可见联想矩阵
+    status: planned
+    input: Run_ID、主锚点、US未登录、All、10001、品类探针和本机输出目录
+    output: 每个输入的状态、全部可见建议、顺序、环境、时间、执行次数和证据指针
+    permission: approved-read
+    risk: 必选来源；无法识别或操作时记not_executed，不用结果页、外部浏览器、网页搜索或API替代

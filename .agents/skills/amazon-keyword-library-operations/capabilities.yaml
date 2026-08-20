@@ -1,0 +1,21 @@
+skill:
+  name: amazon-keyword-library-operations
+  maturity: draft
+  last_verified: null
+capabilities:
+  - id: keyword.library.version.manage
+    type: manual
+    purpose: 维护版本目标、阶段状态、单一职责路由、验收与回滚线索
+    status: planned
+    input: 当前基线、用户确认决策和各专责任务回传
+    output: 版本计划、状态汇总、验收结论和变更说明
+    permission: repository-write-after-review
+    risk: 不代做专责步骤；不覆盖未审查版本；跨项目影响回传工作台总控
+  - id: keyword.source.merge-and-assemble
+    type: manual
+    purpose: 在三个来源副任务回传后按机械键合并来源并装配第一板块十表工作簿
+    status: planned
+    input: 锁定的SIF、Amazon联想、卖家精灵来源清单，类目锚点、SKU事实、批次和站点
+    output: 十表工作簿、稳定主键、来源明细、规范流量字段、异常日志和第一板块完成状态
+    permission: local-draft
+    risk: 不提取来源、不做语义删除或指标平均；任一必选来源未完成时不得判定第一板块完成

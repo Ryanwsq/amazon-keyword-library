@@ -1,0 +1,21 @@
+skill:
+  name: amazon-keyword-sif-competitor-collection
+  maturity: draft
+  last_verified: null
+capabilities:
+  - id: keyword.source.competitor-traffic.query
+    type: mcp
+    purpose: 通过获准SIF适配器逐个反查直接竞品ASIN最近30天流量关键词
+    status: planned
+    input: 站点、单个获准直接竞品ASIN、最近30天口径和300条接口上限请求
+    output: 单个竞品的完整原始响应、流量关键词、全部返回字段、周期和查询状态
+    permission: approved-read
+    risk: 不替换失败ASIN；不把接口上限称为Amazon全量；结构冲突时停止
+  - id: keyword.source.sif.persist-and-verify
+    type: manual
+    purpose: 在解析前即时保存每次SIF完整响应并验证竞品、周期、行数和本机指针
+    status: planned
+    input: 单次SIF返回、请求参数、Run_ID、本机忽略目录和抓取时间
+    output: 版本化原始响应、来源清单、行数核对、异常和主任务回传
+    permission: local-draft
+    risk: 不覆盖旧响应；原始返回未落盘时不得继续汇总或宣称完成

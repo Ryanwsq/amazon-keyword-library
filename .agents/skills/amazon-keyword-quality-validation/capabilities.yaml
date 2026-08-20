@@ -1,0 +1,13 @@
+skill:
+  name: amazon-keyword-quality-validation
+  maturity: draft
+  last_verified: null
+capabilities:
+  - id: keyword.quality.validate
+    type: manual
+    purpose: 独立只读验证一个锁定Run的来源、主键、人口、版本、公式、渲染、Sheet和图表完成门
+    status: planned
+    input: Run_ID、仓库revision、阶段清单、合同版本、本机产物和预期闭环
+    output: 质量验证报告、差异、问题台账、敏感信息检查和pass/blocked/incomplete结论
+    permission: local-read-and-report
+    risk: 不调用业务外部系统、不修改或修复上游文件、不补造证据；硬门失败时必须阻断
