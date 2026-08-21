@@ -7,15 +7,15 @@ description: Build the standalone competition-analysis sheet for classified Amaz
 
 ## 目标
 
-只为 Sheet2 F1–F4 关键词建立独立、可复算的竞争性分析 Sheet，并只用SIF Top3点击份额与Top3转化份额输出综合竞争等级。
+为Sheet2 F1–F4完整词建立固定十二列竞争Sheet，只使用同周期SIF Top3点击/转化份额计算头部集中和锁定等级。
 
 ## 输入
 
-锁定的第二板块及分类版本、Sheet2 F1–F4、稳定 `Keyword_ID`、站点、分析周期、第一板块SIF最小字段表，以及获准的SIF关键词历史接口。
+锁定的分类Sheet2 F1–F4人口、Keyword_ID、第一板块Top3、站点、周期、竞争版本和获准SIF补查范围。
 
 ## 输出
 
-一词一行的`第三板块_关键词竞争性分析`Sheet、竞争记录 ID、Top3两项正式输入、绝对层、结构分化、综合等级、摘要、完整性、置信度和人工复核状态；只向最终装配回传五个竞争引用/摘要字段。
+一个十二列竞争过程工作簿、manifest和紧凑状态；不写广告行动。
 
 ## 可调用能力
 
@@ -25,22 +25,22 @@ description: Build the standalone competition-analysis sheet for classified Amaz
 
 ## 执行步骤
 
-1. 完整读取 `knowledge/index.md`、`../../../docs/keyword-judgment-boundaries.md` 和 `references/output-contract.md`，锁定人口、版本、站点、周期和停止门；不读取 SKU 事实卡。
-2. 只选择 Sheet2 F1–F4，并为每个 `Keyword_ID` 建立唯一 `Competition_Record_ID`；F5、Sheet3、Sheet4 范围外。
-3. 先按完整关键词读取锁定第一板块SIF表中的Top3点击/转化份额、来源竞品和周期。同词多竞品记录一致时合并来源；不同值不平均、不选择性覆盖。
-4. 对Top3任一缺失或同周期冲突的完整关键词，使用`keyword.competition.sif-top3.query`调用SIF `market_get_keyword_history`，每批最多10词、固定`granularity=week`，保存完整响应后只读取latest对象中的date、top3_click_share和top3_conversion_share。不得读取历史均值作当前值，不得用词根、近义词或相关词替代。
-5. 按合同分别计算Top3点击绝对层、Top3转化绝对层和差值结构，再把头部锁定度直接写为综合竞争等级。当前没有比较池、样本门、相对分位、CPC、SPR、商品数量、市场CVR、入场信号或辅助格局修正。
-6. 使用 `keyword.competition.outputs.write-and-verify` 写入独立竞争 Sheet，核对人口、主键、来源周期、完整词状态、Top3完整性、派生等级、缺失/冲突阻断和最终写回字段。
+1. 读取知识、判断边界和`references/output-contract.md`，锁定F1–F4人口、主键、周期和版本；不读取SKU事实。
+2. 按完整关键词复用第一板块SIF Top3。同词多记录一致时合并来源，不平均。
+3. 任一Top3缺失或冲突时，才按完整词精确补拉SIF；同一行两项必须来自同一查询周期。补拉后仍缺失/冲突、周期或单位不明时不出等级。
+4. 将可确认的0–1小数转换为百分比；单位不能确认时停止。
+5. 分别按30/50/70%阈值计算点击和转化集中等级，计算`点击转化差=转化-点击`及结构判断。
+6. 按固定4×4矩阵输出综合竞争等级。综合字段只写低/中/高/极高，结构分化只写结构判断。
+7. 写入固定十二列，验证人口、主键、来源周期、阈值、矩阵、空值门、公式和渲染。
 
 ## 质量标准
 
-- 竞争 Sheet 只包含 F1–F4且一词一行。
-- 正式 SIF 数值只包含完整词Top3点击与Top3转化；优先复用第一板块，必要时批量精确补查。
-- 综合等级只等于Top3两项合成的头部锁定度，不受其他字段或样本数影响。
-- Top3任一缺失、周期不可追溯或冲突未解决时综合等级为空并标记`数据不足/人工复核`。
-- 最终 Sheet1 只接收竞争记录ID、等级、摘要、完整性和复核状态。
-- 不生成趋势、SKU匹配、广告资格或投放动作；Skill保持`draft`。
+- 人口恰好等于Sheet2 F1–F4；F5/Sheet3/Sheet4零混入。
+- 正式输入只有Top3点击和转化份额，且为完整词精确、同周期值。
+- 阈值、差值和矩阵可复算；缺值/冲突/周期或单位不明行无等级。
+- 无CPC、SPR、商品数、市场CVR、Top3 ASIN、比较池、样本门、置信度或广告建议。
+- Skill保持draft/planned，未通过真实三案例不称verified。
 
 ## 异常处理
 
-Top3点击或转化缺失、完整词无精确记录、同词同周期冲突未解决、周期不可追溯或非F1–F4时，不输出正式综合等级。保留原值和来源，标记`数据不足/人工复核`并回传主任务。
+SIF补查不可用时保留第一板块值和缺口，不回退其他来源。主键/人口、周期或单位无法锁定时阻断相应等级并回传主任务。

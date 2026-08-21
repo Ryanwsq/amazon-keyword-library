@@ -1,48 +1,72 @@
 # Amazon Keyword Library
+
 - Project name: Amazon产品关键词知识库
 - Project slug: `amazon-keyword-library`
-- Purpose: 采集、语义分类、清洗、去重并维护跨类目可复用的关键词知识。
+- Purpose: 从真实产品输入开始，完成关键词来源采集、品类清洗、分类、词频、竞争、趋势、最终装配和独立验收。
 - Primary users: Amazon运营、Listing和广告团队
 - Repository sharing classification: sanitized
 - Last reviewed: 2026-08-21
 
 ## Current state
 
-- Repository split status: the standalone project is connected to the private GitHub repository `Ryanwsq/amazon-keyword-library`; `main` is the only long-lived baseline branch, and the initial sanitized repository revision has been published.
-- Main task: the current Codex task is assigned the logical role `keyword-main` with title `Amazon关键词词库｜主任务｜main`.
-- Task model: one persistent main task plus persistent single-responsibility side tasks. Side tasks are not recreated for each run and are not bound to permanent Git branches.
-- Persistent side tasks: all ten logical side tasks have been created in the standalone Codex project on this device, completed read-only initialization and are idle awaiting a locked `Run_ID`; actual IDs, paths and authorization state remain only in the ignored local thread map.
-- Parallel schedule: after SIF and main-task anchor/seed confirmation, Amazon autocomplete and SellerSprite expansion run in parallel; after cleaning closure, word frequency and classification run in parallel; after classification, competition and trend run in parallel. Merge and final assembly wait for all applicable branches.
-- The first fixed-baseline real-case run has reached the final diagnostic workbook and independent QA, but Amazon autocomplete remained `not_executed`; it is an incomplete normal-case run, not P1. Its results now drive the 2026-08-21 field and competition right-sizing; the gaming-chair run remains migration-era issue-discovery evidence.
-- Current knowledge baseline: V2.1.
-- Collection framework is confirmed; category cleaning has four historical cases and a V2.1 layer correction.
-- The third-board and final-workbook structure is confirmed: classify core, secondary and excluded terms; analyze competition for Sheet2 F1–F4 in a separate sheet using only SIF Top3 click/conversion shares; create one category F1–F3 historical monthly search-volume line-chart sheet; then assemble a Sheet2-only final decision master plus all process sheets. A classification draft Skill encodes the confirmed structure with manual stops for unresolved boundaries; the Top3 competition boundary is confirmed, trend adjustments are deferred, and the negative-keyword boundary remains incomplete.
-- The V2.2 word-frequency component has been imported from the user-provided sanitized cross-device package. It is a second-board mechanical step that reads only Sheet2, outputs ranked single-word and adjacent ordered two-word occurrence counts in `Sheet5_词频统计`, and is preserved as a process Sheet; it is not a classification, traffic or advertising signal.
-- The current baseline contains ten business Skills—SIF competitor collection, Amazon autocomplete, SellerSprite expansion, category cleaning, word frequency, keyword classification, competition analysis, trend analysis, final-workbook assembly and independent quality validation—and two maintenance Skills for main-task operations and repository publication. All twelve remain `draft`; all registered capabilities remain `planned`. The two combined migrated packages have been replaced by single-responsibility packages without changing confirmed business rules, and the current repository P0 passes for all twelve packages.
+- 独立私有仓库：`Ryanwsq/amazon-keyword-library`；`main`是唯一长期基线，当前合同更新在短期功能分支完成。
+- 当前长期主任务：`Amazon关键词词库｜主任务｜main`；十个长期单一职责副任务已在本机建立，实际任务ID、路径和授权只保存在Git忽略映射。
+- 当前知识基线仍是清洗V2.1；V2.2只标识词频组件。2026-08-21的来源减配、输出合同和装配规则属于Post-V2.1增量，不命名为新清洗版本。
+- 当前共十二个Skills：十个业务Skill和两个维护Skill。全部保持`draft`，全部能力保持`planned`；本轮文档、合同和P0验证不构成P1。
+- 首轮真实正常案例已经跑到旧结构的最终工作簿和独立QA，但Amazon联想为`not_executed`，且结果生成在本次输出合同锁定之前，只能作为问题发现证据。
+- 正式运行固定为一次用户输入后由主任务调度至最终交付；运行期间知识、Skills和流程只读，问题统一进入一个问题文档，整轮结束后再修改规则。
 
-| 板块 | 状态 | 已确认内容 | 未完成内容 |
-|---|---|---|---|
-| 01 关键词收集 | 首轮结果已减配到最小字段合同，三个单一职责draft Skill已更新；正常案例待重跑 | SIF完整响应本机落盘后装配七列明细/核心候选；必选联想固定内置浏览器/未登录/All/10001；卖家精灵四字段、有界2–3 Pass并在副任务装配工作簿；主任务只收紧凑清单后机械合并 | 内置浏览器可打开但不能识别/操作，联想`not_executed`；减配合同未重跑；三个Skill均无P1 |
-| 02 关键词清洗与词频 | V2.1清洗、V2.2词频和首轮边界修正已确认 | 动态中心对象；自有品牌、拼写、其他语言、类目等价表达；Sheet2/3/4唯一去向；词频只读Sheet2 | 新规则尚未重跑；Sheet3否词边界继续验证；两个Skill无P1 |
-| 03A 关键词分类 | 结构与F5分组已确认，draft Skill已更新 | F1–F5、多标签；F5唯一主分组标签、标签内每20词拆LT且每词只出现一次；Sheet4独立；Sheet3候选 | 新规则尚未重跑；否词边界无P1 |
-| 03B 竞争性与趋势性 | 竞争Skill已按首轮结果减配；趋势Skill本轮不改 | F1–F4独立竞争只用SIF Top3点击/转化绝对层，优先复用第一板块、缺失时批量精确补查；不再使用样本门或其他竞争字段；F1–F3卖家精灵月度折线图暂保持现状 | Top3新合同尚未重跑；两个Skill均无P1；趋势后续另行调整且不可回退其他来源 |
-| 03C 最终工作簿 | Sheet人口和保留规则已确认，draft Skill 已更新 | 第一张总表只收录 Sheet2 核心词；竞争、Sheet3、Sheet4、词频、趋势各自独立；竞争只回写记录ID、综合等级、摘要、完整性和复核状态；三个板块全部过程 Sheet 保留 | 缺少应有的词频 Sheet 时回到词频 Skill 补齐，不在装配阶段重算；分类异常和否词最终规则完成前只能装配已确认输入；新 Skill 尚无 P1 |
-| 独立质量验证 | draft Skill已建立，P0通过 | 只读核对Run/revision、来源、主键、人口、版本、公式、渲染、Sheet和图表闭环；输出pass/blocked/incomplete | 尚未执行独立仓库真实案例P1；不修复上游、不调用业务外部系统 |
-| 发布与版本 | 阶段性可维护 | 已确认内容与待确认内容分层，版本可追踪 | 尚未形成经三案例验证的发布 Skill |
+## Confirmed execution graph
 
-## Open questions
+1. 主任务锁定产品事实、类目锚点候选、竞品、站点、Run和规则版本。
+2. SIF竞品反查先运行；主任务确认一个主核心大词和卖家精灵代表种子。
+3. Amazon联想与卖家精灵扩词并行。
+4. 主任务机械合并三来源，输出第一板块两Sheet工作簿。
+5. 第二板块完成Sheet2/3/4三去向清洗。
+6. 清洗闭环后，词频与关键词分类并行。
+7. 分类完成后，竞争性与趋势性并行。
+8. 最终装配生成过程文件夹和七Sheet最终工作簿。
+9. 独立质量验证只读执行21项装配门；未通过不得标记完成。
 
-- Codex 内置浏览器可以拉起但不能识别/操作 Amazon 页面的技术问题怎样解决；解决前联想保持`not_executed`。
-- 关键词趋势内容的后续减配或结构调整；本轮明确不修改现有趋势规则。
-- Sheet3 中词组否定、精准否定、不否定和人工确认的判定边界，以及如何防止词组否定误伤 Sheet2/Sheet4。
-- 最终关键词决策总表之后的广告资格、广告框架和单 Sheet 品类通用词库均待后续单独确认，不属于当前第三板块第一、二部分。
-- 首轮正常案例补齐联想后，按2026-08-21最小字段与Top3竞争合同从锁定输入重跑并输出旧去向到新去向差异；其后再完成第二个正常案例和边界/异常案例。
+## Module status
+
+| 模块 | 当前合同 | 当前状态 |
+|---|---|---|
+| SIF竞品反查 | 七列业务明细和紧凑核心词候选；完整响应仅本地证据 | draft/planned；旧首轮证据不可作为P1 |
+| Amazon联想 | 必选；内置浏览器、Amazon US未登录、All、10001、完整固定矩阵 | draft/planned；适配问题仍待解决 |
+| 卖家精灵扩词 | 四列业务表；有界最大召回与损失风险 | draft/planned |
+| 三来源机械合并 | 两Sheet：关键词池、任务信息与类目锚点 | 合同已确认，待新Run重跑 |
+| 品类清洗 | 四Sheet：事实与锚点、品类相关、其他摘除、二类词 | V2.1边界不变；字段合同已减负 |
+| 分类 | Sheet2追加4固定列+N动态语义列；Sheet4追加4固定列；最小否词库 | 合同已确认，待P1 |
+| 词频 | Sheet2英文词；去除介词且介词为双词断点；两张三列表 | V2.2组件规则已更新，待P1 |
+| 竞争 | Sheet2 F1–F4；只用SIF Top3点击/转化份额；12列 | 合同已确认，待P1 |
+| 趋势 | Sheet2 F1–F3；卖家精灵至少24完整月；月/季环比同比及两图 | 合同已确认，待P1 |
+| 最终装配 | 两个顶层对象；最终工作簿固定七Sheet；总表覆盖三去向50+N列 | 合同已确认，待P1 |
+| 独立质量验证 | 两Sheet质量报告、唯一问题文档、21项装配门 | draft/planned，待新Run验证 |
+
+## Final delivery contract
+
+顶层只交付：
+
+1. `过程性文件/`：分第一板块、第二板块、第三板块和独立质量验证四个目录，并含唯一`process-manifest.json`。
+2. `<Run_ID>-最终关键词词库.xlsx`：仅七个可见Sheet，顺序固定为`最终关键词决策总表`、`SKU事实卡`、`品类产品通用词库`、`关键词竞争性分析`、`关键词趋势性分析`、`词频统计`、`否词库`。
+
+最终总表覆盖第一板块机械去重全人口，每个`Keyword_ID`恰好一行并标记`品类相关/其他摘除/二类词`。详细Top3及竞争结构只在独立竞争Sheet；广告资格和投放动作当前统一为`未评估/后置`。
+
+## Open work
+
+- 修复或替换内置浏览器无法识别Amazon联想页面的适配问题；联想未执行时正常案例仍不完整。
+- 从锁定仓库revision启动新的正式只读Run，按当前合同完整重跑该真实案例，并只把错误记录到唯一问题文档。
+- 完成两个正常案例和一个边界/异常案例的真实P1；此前不得提升Skill成熟度。
+- 广告否定方式、广告资格和投放动作仍是后置模块；当前否词库仅保留语义否词候选，不输出精准/词组否定类型。
+
 ## Success criteria
-- 每个词保留来源、类目语义、意图、状态和版本。
-- 分类规则跨类目稳定，类目专属词不被错误泛化。
-- 清洗闭环可复核，不把待确认研究写成已验证规则。
-## Main outputs
-- 当前可输出关键词知识基线、判定边界和各工作簿合同。首轮旧字段/旧竞争工作簿仅为本机验证证据；在联想补齐和2026-08-21合同重跑前，不作为当前正式品类词库交付或P1证据。否词最终判断仍需补齐边界。
+
+- 三来源尽可能完整抓取；局部字段或接口异常不吞掉已经取得的关键词。
+- 第一板块机械词池、第二板块三去向和最终总表人口逐层闭合，主键、来源、周期和版本可追溯。
+- 分类、词频、竞争、趋势和通用词库均可从锁定上游机械复算。
+- 最终只有两个顶层交付对象，最终工作簿恰好七个可见Sheet。
+- 独立QA通过全部适用硬门后才可标记`completed`或`completed_with_gaps`。
 
 ## Source of truth map
 
@@ -50,10 +74,12 @@
 - 稳定领域知识：`knowledge/product-keyword-library.md`
 - 历史案例证据：`knowledge/keyword-cleaning-case-evidence.md`
 - 已确认版本决策：`knowledge/keyword-decision-log.md`
-- 当前完成度、未完成项和下一步：本文
+- 当前完成度和下一步：本文
 - 判定门槛与人工升级：`docs/keyword-judgment-boundaries.md`
 - 可重复执行流程：`.agents/skills/<single-purpose>/`
+
 ## Boundaries
-- 不保存账号、店铺授权、原始广告导出或未脱敏业务数据。
-- 稳定知识、判定边界和执行流程分别维护，不把历史案例反向写成新 Skill 的验证证据。
-- 修改任何项目知识或 Skill 时，同批同步 `docs/end-to-end-workflow.md`；未同步不能验收。
+
+- 不保存账号、Token、原始接口响应、真实业务工作簿、任务ID、绝对路径或未脱敏数据到Git或飞书发布正文。
+- 修改任何项目知识或Skill时，同批同步`docs/end-to-end-workflow.md`；未同步不得验收。
+- 正式只读运行中不改规则；问题先集中记录，运行结束并经用户确认后才进入规则迭代。

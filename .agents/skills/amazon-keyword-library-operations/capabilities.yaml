@@ -2,20 +2,21 @@ skill:
   name: amazon-keyword-library-operations
   maturity: draft
   last_verified: null
+
 capabilities:
   - id: keyword.library.version.manage
     type: manual
-    purpose: 维护版本目标、阶段状态、单一职责路由、验收与回滚线索
+    purpose: 锁定一次用户输入和运行版本并协调长期副任务、汇合门、最终交付和独立验收
     status: planned
-    input: 当前基线、用户确认决策和各专责任务回传
-    output: 版本计划、状态汇总、验收结论和变更说明
-    permission: repository-write-after-review
-    risk: 不代做专责步骤；不覆盖未审查版本；跨项目影响回传工作台总控
+    input: 产品事实、竞品、Run_ID、仓库revision、站点、规则版本和授权范围
+    output: 输入锁、任务路由、阶段状态、冲突清单和验收结论
+    permission: local-draft
+    risk: 不代做专责业务判断；正式只读运行中不修改规则；QA未通过不标记完成
   - id: keyword.source.merge-and-assemble
     type: manual
-    purpose: 在三个来源副任务回传后按机械键合并来源并装配第一板块十表工作簿
+    purpose: 机械合并SIF、Amazon联想和卖家精灵锁定回传并装配第一板块两Sheet工作簿
     status: planned
-    input: 锁定的SIF七列工作簿、Amazon联想清单、卖家精灵四列工作簿及各自紧凑清单，类目锚点、SKU事实、批次和站点
-    output: 十表工作簿、稳定主键、来源索引、规范ABA/搜索量、Top3字段、异常日志和第一板块完成状态
-    permission: local-draft
-    risk: 不提取来源、不加载原始长响应、不做语义删除或指标平均；任一必选来源未完成时不得判定第一板块完成
+    input: 三来源最小工作簿、manifests、哈希、状态、类目锚点和SKU事实
+    output: Sheet1关键词池、Sheet2任务信息与类目锚点、合并manifest和完成状态
+    permission: local-draft-and-verify
+    risk: 不语义删词；不把缺值填0；Amazon联想未执行时第一板块不得完成

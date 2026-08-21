@@ -2,12 +2,13 @@ skill:
   name: amazon-keyword-category-cleaning
   maturity: draft
   last_verified: null
+
 capabilities:
   - id: keyword.library.clean
     type: manual
-    purpose: 按动态目标完整商品对象和一级品类相关性把原始关键词唯一分配到Sheet2、Sheet3或Sheet4
+    purpose: 按V2.1一级品类边界将第一板块完整词池分配到品类相关、其他摘除和二类词
     status: planned
-    input: 类目锚点卡、自有品牌声明、规范ABA或搜索量、原始关键词表和清洗版本目标；不使用SKU具体配置删词
-    output: 三去向工作簿、错字错词/其他语言/自有品牌标签、具体摘除原因、去向差异和闭环质检摘要
-    permission: local-draft
-    risk: 不在第二板块按SKU配置删词；不强制二类词非零；不把语言或拼写自动当摘除；歧义词保守进入Sheet3并写具体原因
+    input: 锁定的两Sheet第一板块工作簿、Keyword_ID、规范流量、类目锚点、SKU事实和版本
+    output: 四Sheet清洗工作簿、三去向人口闭环、manifest和问题摘要
+    permission: local-draft-and-verify
+    risk: 不因SKU配置删除同品类词；不打第三板块标签；主键或人口不闭合时阻断
