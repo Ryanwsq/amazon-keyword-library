@@ -5,33 +5,25 @@ skill:
 capabilities:
   - id: keyword.library.competition.analyze
     type: manual
-    purpose: 协调Sheet2 F1至F4独立竞争分析并按正式输出门形成可复算结论
+    purpose: 协调Sheet2 F1至F4独立Top3竞争分析并按正式输出门形成可复算结论
     status: planned
-    input: 锁定的F1至F4分类人口、Keyword_ID、卖家精灵上游字段、站点和周期
+    input: 锁定的F1至F4分类人口、Keyword_ID、第一板块SIF Top3字段、站点和周期
     output: 独立竞争Sheet、综合等级或阻断状态、摘要、完整性和复核结果
     permission: approved-read-and-local-draft
-    risk: 不读取SKU事实卡；无精确匹配或样本不足10时不出综合等级；不输出广告资格
-  - id: keyword.competition.sif-landscape.query
+    risk: 不读取SKU事实卡；Top3任一缺失或冲突未解决时不出综合等级；不输出广告资格
+  - id: keyword.competition.sif-top3.query
     type: mcp
-    purpose: 通过SIF关键词竞争格局补充集中度历史、结构分化和可进入性辅助证据
+    purpose: 通过SIF关键词历史接口批量补齐完整词最新Top3点击与转化份额
     status: planned
-    input: 站点、完整关键词和分析周期
-    output: 集中度、Top3历史、头部流量结构、Top3外购买空间、可进入性解释和周期
+    input: 站点、每批1至10个缺失或冲突的完整关键词和周粒度
+    output: 完整原始响应，以及每词latest日期、Top3点击份额和Top3转化份额
     permission: approved-read
-    risk: 当前不传目标ASIN；辅助值不得替代或覆盖机会筛选正式值
-  - id: keyword.competition.sif-opportunity.screen
-    type: mcp
-    purpose: 通过SIF机会筛选取得完整关键词正式竞争输入和入场信号
-    status: planned
-    input: 获准词根、目标站点和返回数量
-    output: 可精确匹配完整关键词的CPC、Top3点击转化、市场CVR、入场信号、Top3 ASIN和周期
-    permission: approved-read
-    risk: 不调用词根竞争者识别；无完整词精确匹配不得使用近似词替代
+    risk: 只读latest三字段；不使用历史均值、近似词或接口预计算结论替代
   - id: keyword.competition.outputs.write-and-verify
     type: manual
-    purpose: 写入并验证独立F1至F4竞争Sheet的来源、样本、派生等级和写回字段
+    purpose: 写入并验证独立F1至F4竞争Sheet的Top3来源、派生等级和写回字段
     status: planned
-    input: 分类人口、正式输入、辅助证据、比较池、规则版本和异常
+    input: 分类人口、Top3两项正式输入、来源周期、规则版本和异常
     output: 竞争Sheet、人口主键闭环、样本门、完整性、置信度和主任务回传
     permission: local-draft-and-verify
-    risk: 不覆盖分类表；不满足正式门时不得写综合等级
+    risk: 不覆盖分类表；Top3任一缺失、冲突未解决或周期不明时不得写综合等级

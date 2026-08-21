@@ -37,7 +37,7 @@ description: Assemble the Amazon keyword project's final workbook with a Sheet2-
 2. 复制阶段 Sheet 到一个新工作簿，不覆盖源工作簿。给过程 Sheet 加 `B1_`、`B2_`、`B3_` 前缀；Excel 名称超过限制或重名时使用清单中的稳定短名并保存原名映射。
 3. 以第二板块 Sheet2 的稳定 `Keyword_ID` 为唯一人口，建立第一张`Sheet1_最终关键词决策总表`。Sheet3 和 Sheet4 关键词不得进入。
 4. 合并核心关键词的身份、翻译、来源、规范流量和分类列；多来源关键词保持一行，在`来源渠道`汇总来源集合，逐条来源事件、各来源原值、规范来源和回退标记留在第一板块过程 Sheet。F5保留`长尾主分组标签`，每个关键词只出现一次。
-5. 通过 `Competition_Record_ID` 连接独立竞争 Sheet，只回写综合竞争等级、竞争判断摘要和竞争数据完整性，并把竞争复核状态与已有分类复核状态汇总到`人工复核状态`；SIF/卖家精灵详细输入、过程证据和派生列留在独立竞争 Sheet。F5 写`综合竞争等级=不适用（F5）`、`竞争数据完整性=范围外`，不能当作缺失。
+5. 通过 `Competition_Record_ID` 连接独立竞争 Sheet，只回写综合竞争等级、竞争判断摘要和竞争数据完整性，并把竞争复核状态与已有分类复核状态汇总到`人工复核状态`；Top3两项输入、绝对层、差值结构和派生列留在独立竞争 Sheet。F5 写`综合竞争等级=不适用（F5）`、`竞争数据完整性=范围外`，不能当作缺失。
 6. 把 Sheet4 的第三板块流量分类结果保留为独立二类词 Sheet；二类词只保留 ABA 流量分层、LT 分组和替代关系，不做竞争性或趋势性分析。把 Sheet3 的否词候选设计保留为独立 Sheet；两者不与 Sheet1 混表，未确认状态不得改成可执行否词。
 7. 把一个品类的 F1–F3 历年月度搜索量折线图保留为独立 Sheet，同表保留绘图数据矩阵，不在 Sheet1 增加趋势字段；F4、F5 不进入。
 8. 完整保留已有过程 Sheet，包括第二板块 `Sheet5_词频统计`。若本批已完成清洗但缺少应有词频结果，停止完整装配并路由回词频 Skill；本 Skill 不自行重算或伪造 Sheet 内容。
@@ -46,7 +46,7 @@ description: Assemble the Amazon keyword project's final workbook with a Sheet2-
 ## 质量标准
 
 - Sheet1 只包含 Sheet2 核心关键词，一词一行。
-- 独立竞争 Sheet 完整保留正式输入和派生字段；Sheet1 只含 `Competition_Record_ID`、综合竞争等级、竞争判断摘要、竞争数据完整性和人工复核状态。
+- 独立竞争 Sheet 完整保留Top3两项正式输入和派生字段；Sheet1 只含 `Competition_Record_ID`、综合竞争等级、竞争判断摘要、竞争数据完整性和人工复核状态。
 - Sheet3 否词库、Sheet4 二类词和 F1–F3 趋势图各自独立，不混入 Sheet1。
 - 第一、第二、第三板块全部实际过程 Sheet 均被保留，新增 Sheet 也进入清单。
 - 来源渠道、数据周期、版本、主键和缺失状态可追溯。
