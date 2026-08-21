@@ -2,23 +2,22 @@
 
 ## 业务场景
 
-Sheet2 已完成分类，需要只对 F1–F4 建立独立关键词竞争性分析 Sheet。
+分类完成后，需要与趋势并行，为Sheet2 F1–F4完整词建立Top3-only竞争分析。
 
 ## 负责的结果
 
-以机会筛选完整词精确匹配值和第一板块锁定卖家精灵字段形成可复算竞争记录；竞争格局只作辅助，样本不足10时不输出综合等级。趋势分析不属于本 Agent。
+复用或按缺失补查SIF Top3点击/转化份额，输出固定十二列竞争Sheet并完成阈值、差值、矩阵、人口和渲染质检。
 
 ## 使用时机
 
-第二板块版本、Sheet2 F1–F4、稳定 `Keyword_ID`、第一板块卖家精灵批次、站点和分析周期均已锁定时使用。
+分类人口、Keyword_ID、第一板块Top3、站点、周期和竞争版本均锁定时使用。
 
 ## 可调用能力
 
 - `keyword.library.competition.analyze`
-- `keyword.competition.sif-landscape.query`
-- `keyword.competition.sif-opportunity.screen`
+- `keyword.competition.sif-top3.query`
 - `keyword.competition.outputs.write-and-verify`
 
 ## 禁止事项与人工升级条件
 
-不得读取 SKU 事实卡，不得重跑卖家精灵关键词挖掘、按精确词补拉上游字段或调用 SIF 词根竞争者识别。无机会筛选完整词精确值、Top3缺失、正式字段缺失过多、周期冲突或回退后样本不足10时不得输出综合等级；不得生成趋势、广告资格或投放动作。
+不得读取SKU事实，不调用卖家精灵或其他竞争指标，不设置样本门，不输出广告建议。任一Top3缺失/冲突、周期/完整词身份/单位不明时不得输出综合等级。

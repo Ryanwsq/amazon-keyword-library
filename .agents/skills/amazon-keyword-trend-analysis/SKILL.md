@@ -1,47 +1,48 @@
 ---
 name: amazon-keyword-trend-analysis
-description: Build one category-level historical monthly search-volume line chart for classified Amazon Sheet2 F1-F3 keywords using SellerSprite only. Use for品类关键词历年月度趋势矩阵、折线图和月份质检；do not use for competition scoring, source mining, SIF trends, trend labels or ad decisions.
+description: Build one category-level monthly and quarterly trend sheet for classified Amazon Sheet2 F1-F3 keywords using at least 24 complete months of exact SellerSprite search volume. Use for月度环同比、季度环同比、趋势矩阵和折线图；do not use for competition, source mining, SIF trends, seasonality labels or ad decisions.
 ---
 
 # Amazon Keyword Trend Analysis
 
 ## 目标
 
-只用卖家精灵精确词月度搜索量，为一个品类的 Sheet2 F1–F3 关键词生成一个可复算趋势 Sheet和一张多序列折线图。
+只用卖家精灵精确词月搜索量，为Sheet2 F1–F3生成至少24完整月证据、最近12月与4季度矩阵及两张环比/同比折线图。
 
 ## 输入
 
-锁定的第二板块及分类版本、Sheet2 F1–F3、稳定 `Keyword_ID`、站点、查询批次、最早可用月份、最新完整月份和获准的卖家精灵 `aba_research_trend`。
+锁定分类工作簿、Sheet2 F1–F3人口、Keyword_ID、站点、最新完整月、查询批次、趋势版本和获准卖家精灵趋势接口。
 
 ## 输出
 
-一个品类趋势性分析 Sheet：元数据、`YYYY-MM`月度搜索量矩阵、一张每词一条线的折线图、缺失月份和完整性状态；不写回最终 Sheet1。
+只含`Sheet8_品类关键词趋势性`的过程工作簿、trend manifest和紧凑状态；不把24个月逐词数据贴进主任务对话。
 
 ## 可调用能力
 
 - `keyword.library.trend.analyze`
-- `keyword.trend.sellersprite-aba.query`
-- `keyword.trend.output.write-and-verify`
+- `keyword.trend.sellersprite.query`
+- `keyword.trend.outputs.write-and-verify`
 
 ## 执行步骤
 
-1. 完整读取 `knowledge/index.md`、`../../../docs/keyword-judgment-boundaries.md` 和 `references/output-contract.md`，锁定人口、站点、月份和停止门；不读取 SKU 事实卡。
-2. 只选择 Sheet2 F1–F3；F4、F5、Sheet3、Sheet4范围外。
-3. 对每个完整关键词使用 `keyword.trend.sellersprite-aba.query` 获取全部可用历史月度搜索量。每条记录的月份必须非空且可解析为`YYYY-MM`；当前未结束月份不进入。
-4. 空月份响应无效，只能在获准参数范围内调整后重查；不得自行生成月份。卖家精灵不可用或无可用完整月时标记`not_executed`，不调用 SIF 或其他平台替代。
-5. 统一站点、月份范围和搜索量口径，在一个 Sheet 中建立矩阵：第一列月份，后续每列一个关键词；缺失月份留空并记录，不填0、不插值、不前值延续。
-6. 使用 `keyword.trend.output.write-and-verify` 生成一张折线图：横轴年-月，纵轴月度搜索量，每个关键词恰好一条线，图例为关键词。
-7. 核对 F1–F3人口、关键词列、月份升序、非空月份、图表序列、图例、来源和周期；趋势不写回最终总表。
+1. 读取知识、判断边界和`references/output-contract.md`，锁定F1–F3人口、主键、站点、最新完整月、24月范围和版本。
+2. 对每个完整英文关键词执行卖家精灵精确词趋势查询；不用词根、近义词、SIF或其他来源替代。
+3. 保存实际返回和月份；当前未结束月排除。月份为空/不可解析无效，缺值留空，不填0、不插值。
+4. 至少形成24个完整月查询范围；最近12完整月进入月度矩阵，额外历史用于同比和季度基准。
+5. 计算月环比/月同比。当前或基准缺失、基准为0时留空。
+6. 按完整自然季度求和；任一月缺失则该季度搜索量、环比、同比全部留空。展示最近4完整季度。
+7. 写入关键词索引、36行月度矩阵、12行季度矩阵和两张百分比折线图。每个关键词两条线，同词同色，环比实线、同比虚线。
+8. 验证人口、月份、季度、空值、公式、矩阵列、图表范围和序列数；渲染Sheet及两图。
 
 ## 质量标准
 
-- 一个品类只有一个趋势 Sheet和一张折线图。
-- 仅包含 Sheet2 F1–F3，每个主键恰好一条图表序列。
-- 正式来源仅卖家精灵月度搜索量，月份非空可解析。
-- 缺失月份留空且可识别，没有填0、插值或跨来源补值。
-- 不生成近三月、同比、ABA走势、峰值、季节性、汇总线、趋势标签或广告动作。
-- Skill保持`draft`，没有真实三案例前不声称已验证。
+- 人口恰好等于Sheet2 F1–F3，其他人口零混入。
+- 每词使用卖家精灵精确词且至少查询24个完整月。
+- 月度固定12×3，季度固定4×3，每词在两矩阵恰好一列。
+- 两图各有`关键词数×2`理论序列且不混入搜索量。
+- 无趋势标签、季节性、广告资格或行动建议。
+- Skill保持draft/planned，未完成真实三案例不称verified。
 
 ## 异常处理
 
-卖家精灵趋势接口不可用、月份为空或无可用完整月时标记`not_executed`，不生成替代图。单词存在部分月份缺失时保留空值和覆盖范围；主键、人口、月份或序列无法闭合时阻断交付并回传主任务。
+接口不可用或全局无完整月为`not_executed`；至少一词零有效数据或环同比基准整体不足为`incomplete`；各词有数据但部分月份缺失可为`completed_with_gaps`；主键、人口、矩阵或图表无法闭合为`blocked`。不回退其他来源。

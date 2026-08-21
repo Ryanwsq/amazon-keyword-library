@@ -1,66 +1,45 @@
 # Category-cleaning workbook contract
 
-This file defines the repeatable workbook output for `keyword.library.clean`. Category and substitute decisions must follow the separate project judgment-boundary document.
-
 ## Input lock
 
-- Preserve the complete source sheet and its original fields.
-- Record source row count, category-anchor version and cleaning version before processing.
-- Keep original row number or Keyword_ID as the stable cross-stage key.
-- Do not collect new keywords in this stage.
+锁定第一板块工作簿名称、SHA-256、唯一关键词人口、Keyword_ID、类目锚点版本、SKU事实和清洗版本。第二板块不新增关键词，也不复制完整源表。
 
-## Fixed output
+## Fixed workbook
 
-| Sheet | Content |
-|---|---|
-| Sheet1 | Complete source data, unchanged |
-| Sheet2 | Traffic gate passed and the complete keyword remains in the top-level category |
-| Sheet3 | Traffic gate failed/missing, or the term is an undeclared third-party brand/IP, Gift, accessory/complement, broad/fragmentary, service, multi-product, unrecognized or unrelated |
-| Sheet4 | Traffic gate passed, no brand/Gift exclusion, and the complete product is a direct substitute; header only is valid |
+### Sheet1_事实与类目锚点
 
-Each classified row retains at least:
+- SKU事实卡：`事实分类、事实字段、确认值、状态/来源`。
+- 类目锚点卡：`锚点字段、确认值、状态/依据`。
+- 锚点至少覆盖版本、一级品类、主核心大词、等价表达、目标SKU细分品类、中心购买对象、Sheet2纳入边界、配件/互补品边界、Sheet4直接替代边界和歧义事项。
 
-- Keyword_ID or original row number.
-- Original keyword and original traffic fields.
-- ABA-gate result, search-volume-gate result and final OR result.
-- Center purchase object.
-- Primary judgment type.
-- Optional additional hit labels.
-- One final destination.
-- Concrete semantic reason, not only “low relevance”.
-- Canonical ABA/search-volume source and fallback status.
-- Applicable labels for English-letter typo, other language and self-brand; no correction/suggested-correction field.
+### Sheet2_品类相关
 
-## Execution sequence
+固定十三列：`Keyword_ID、英文关键词、中文翻译、ABA月排名、月搜索量、关键词来源、流量数据来源、Top3点击份额、Top3转化份额、数据状态、中心购买对象、品类关系、保留理由`。
 
-1. Normalize only for judgment while retaining the original text.
-2. Apply the confirmed OR traffic gate.
-3. Route a failed traffic gate to Sheet3 and exclude it from the current main frequency population.
-4. Apply brand/IP and Gift routing, keeping declared self-brand target-product terms eligible for Sheet2.
-5. Determine whether the keyword independently expresses a complete purchase object.
-6. Identify the center object and route it using the project Sheet2/3/4 boundary.
-7. Retain multiple diagnostic labels if useful, but assign one primary type and one final destination.
-8. Keep recognizable English-letter typo and other-language target-product phrases in Sheet2 with labels; do not create corrected keywords. Route adjacent complete substitute products to Sheet4 when all substitute conditions hold.
-9. If the keyword itself cannot resolve its purchase object, route it to Sheet3 with a concrete reason; never leave it outside the three destinations or interrupt the run for every row.
-10. Reconcile counts, scan formula errors, render every sheet and complete human visual review. After a confirmed boundary change, rerun and produce an old-to-new destination diff.
+第二板块不打语义标签。Top3缺失留空并在数据状态标记；后续竞争只对F1–F4缺失/冲突词补拉，不覆盖本表快照。
+
+### Sheet3_其他摘除
+
+固定十三列：`Keyword_ID、英文关键词、中文翻译、ABA月排名、月搜索量、关键词来源、流量数据来源、数据状态、流量门状态、中心购买对象、摘除主类型、摘除理由、人工复核状态`。
+
+流量门状态只用`通过-ABA、通过-搜索量、通过-双项、未通过、缺流量数据`。摘除主类型至少覆盖流量门、第三方品牌/IP、Gift、配件/零件/耗材/服务、多商品、泛词/残缺/歧义、仅场景/人群/活动、非直接替代、完全无关和其他。Sheet3不保留Top3，不输出否定方式。
+
+### Sheet4_二类词
+
+固定十二列：`Keyword_ID、英文关键词、中文翻译、ABA月排名、月搜索量、关键词来源、流量数据来源、数据状态、中心购买对象、二类商品类型、共同核心购买任务、直接替代理由`。
+
+全部Sheet4行已经通过流量门；不重复流量门，不保留Top3，不进入竞争/趋势。允许只有表头。
+
+## Manifest
+
+只记录运行身份、输入名称/哈希/人口、事实和锚点状态、输出名称/哈希、三去向行数、重复/缺失主键、缺流量、Top3缺失、来源冲突、人工复核、公式/渲染/目视检查、状态和唯一问题文档相对路径。
 
 ## Quality gate
 
-The cleaning result passes only when:
-
-1. `Sheet2 data rows + Sheet3 data rows + Sheet4 data rows = Sheet1 source rows`.
-2. Every source row has exactly one destination and a stable source key.
-3. Source-provided relevance fields are preserved but never used as the final decision.
-4. Same-category subtype, appearance, structure, attribute, function and configuration terms are not deleted because the target SKU lacks them.
-5. High-traffic brand, Gift and accessory terms do not enter Sheet2 merely because they contain the category anchor.
-6. Broad, scene-only and incomplete expressions do not enter Sheet2 through weak association.
-7. Every Sheet4 term is a complete direct substitute; accessories and merely adjacent products are excluded.
-8. Removed rows retain metrics, judgment type and reason.
-9. A term with ABA rank above 1,000,000 but search volume above 100 still receives semantic review.
-10. Sheet4 may contain zero data rows.
-11. Sheet2 is not represented as a target-SKU exact-match library.
-12. English-letter spelling errors and other languages are not automatic Sheet3 reasons; declared self-brand and undeclared third-party brands are distinguished.
-
-## Current downstream boundary
-
-Only all non-empty Sheet2 complete keywords participate in the downstream word-frequency step. Sheet3, Sheet4 and traffic-gate failures do not. This cleaning Skill does not calculate frequency; after its quality gate passes, route the workbook to `amazon-keyword-word-frequency`, which owns the confirmed V2.2 tokenization, counting, sorting and `Sheet5_词频统计` output contract.
+1. `Sheet2+Sheet3+Sheet4=输入人口`。
+2. 每个Keyword_ID恰好一个去向，三表不交叉。
+3. 原词、主键和来源指标不改写；缺值不填0。
+4. Sheet2无语义标签/SKU匹配；Sheet3无Top3/否定方式；Sheet4无Top3/竞争/趋势。
+5. 同品类配置词不因SKU不具备而删除。
+6. 每个Sheet3行有明确主类型/理由；每个Sheet4行满足直接替代门。
+7. 四Sheet公式扫描、渲染和目视复核通过。

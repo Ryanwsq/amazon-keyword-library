@@ -2,28 +2,29 @@ skill:
   name: amazon-keyword-trend-analysis
   maturity: draft
   last_verified: null
+
 capabilities:
   - id: keyword.library.trend.analyze
     type: manual
-    purpose: 协调Sheet2 F1至F3品类历年月度搜索量矩阵和单一折线图输出
+    purpose: 协调Sheet2 F1至F3至少24完整月的月度和季度环同比趋势输出
     status: planned
-    input: 锁定的F1至F3人口、Keyword_ID、站点、月份范围和趋势查询批次
-    output: 一个品类趋势Sheet、月度矩阵、折线图、缺失和完整性状态
-    permission: approved-read-and-local-draft
-    risk: 只用卖家精灵月度搜索量；月份无效时不生成图；不输出趋势标签或广告动作
-  - id: keyword.trend.sellersprite-aba.query
-    type: mcp
-    purpose: 获取F1至F3完整关键词的卖家精灵历年月度搜索量
-    status: planned
-    input: 目标站点、单个完整关键词和月度粒度
-    output: 月份非空且可解析的月度搜索量、可用年月和数据周期
-    permission: approved-read
-    risk: 唯一正式来源；失败时不回退SIF或其他平台，不自行生成月份
-  - id: keyword.trend.output.write-and-verify
-    type: manual
-    purpose: 写入并验证一个品类F1至F3趋势Sheet、月度矩阵和多序列折线图
-    status: planned
-    input: F1至F3人口、月度搜索量、来源周期、月份范围和缺失状态
-    output: 月度矩阵、折线图、关键词月份序列闭环和主任务回传
+    input: 锁定F1至F3人口、Keyword_ID、站点、最新完整月、批次和版本
+    output: 单Sheet趋势工作簿、manifest、覆盖状态和质检结论
     permission: local-draft-and-verify
-    risk: 不混入F4/F5/Sheet3/Sheet4；不写回最终总表；不生成趋势标签
+    risk: 只用卖家精灵精确词月搜索量；不输出趋势标签或广告动作
+  - id: keyword.trend.sellersprite.query
+    type: mcp
+    purpose: 为每个F1至F3完整词拉取至少24个已结束月份的卖家精灵月搜索量
+    status: planned
+    input: 完整英文关键词、站点、月份范围和获准批次
+    output: 逐词逐月原始响应、可解析月份、搜索量和缺失状态
+    permission: external-read-authorized
+    risk: 不用词根近义词或其他来源替代；月份无效不造值
+  - id: keyword.trend.outputs.write-and-verify
+    type: manual
+    purpose: 写入并验证关键词索引、12月和4季度矩阵以及两张百分比折线图
+    status: planned
+    input: F1至F3人口、至少24月数据、公式、版本和异常
+    output: Sheet8品类关键词趋势性、manifest、公式渲染和序列闭环
+    permission: local-draft-and-verify
+    risk: 缺月季度不求和；矩阵或图表不闭合时阻断

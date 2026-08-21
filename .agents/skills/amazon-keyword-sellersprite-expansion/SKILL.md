@@ -1,21 +1,21 @@
 ---
 name: amazon-keyword-sellersprite-expansion
-description: Expand approved representative Amazon category seeds through SellerSprite from page 1 to an explicit end while preserving every raw row and field. Use for第一板块卖家精灵分页扩词、漂移重复和字段缺失检查；do not use for seed selection, SIF, autocomplete, source merging or trend queries.
+description: Expand approved representative Amazon category seeds through SellerSprite with a bounded maximum-recall pass, four requested business fields and a locally assembled handoff workbook. Use for第一板块卖家精灵分页扩词、漂移重复、四字段表格和损失风险检查；do not use for seed selection, SIF, autocomplete, source merging or trend queries.
 ---
 
 # Amazon Keyword SellerSprite Expansion
 
 ## 目标
 
-对主任务确认的代表种子逐页执行卖家精灵关键词挖掘，完整保留原始页、原始行、字段和分页证据。
+对主任务确认的代表种子执行有界最大召回分页，保存接口实际返回的原始页和分页证据，并在副任务内装配四字段关键词表。
 
 ## 输入
 
-锁定的 `Run_ID`、站点、1–3个已去重代表种子、每页20条参数、本机忽略批次目录和当前获准的卖家精灵 MCP。
+锁定的 `Run_ID`、站点、查询月份、1–3个已去重代表种子、每页20条参数、本机忽略批次目录和当前获准的卖家精灵 MCP。
 
 ## 输出
 
-逐种子逐页原始响应、全部行和字段、实际返回行数、机械键重复组、总数漂移、字段缺失、分页状态、异常日志及主任务回传清单。
+逐种子逐页原始响应、实际返回行数、机械键重复组、总数/页数漂移、四字段缺失、分页/Pass状态、损失风险、四列来源工作簿及主任务紧凑回传清单。
 
 ## 可调用能力
 
@@ -24,22 +24,23 @@ description: Expand approved representative Amazon category seeds through Seller
 
 ## 执行步骤
 
-1. 完整读取 `knowledge/index.md`、`../../../docs/keyword-judgment-boundaries.md` 和 `references/source-contract.md`，核对种子、站点、分页参数和停止门。
-2. 每个代表种子从第1页开始，以每页20条连续调用 `keyword.source.keyword-mining.query`；种子由主任务给定，本 Skill 不新增或替换。
-3. 每页返回后立即保存完整原始响应、页码、种子、站点、时间、声明总数/页数和全部返回字段。
-4. 使用 `keyword.source.sellersprite.paginate-and-verify` 检查页码连续、声明页数、明确最后页、缺页、整页重复和循环。声明总数漂移仅在页数稳定、连续、无缺页/整页重复/循环且有明确最后页时允许继续，以实际行数闭环。
-5. 原始页边界重复和同一机械键冲突全部保留；只输出重复组和建议展示首条，不在本 Skill 建立三来源总表。
-6. 显式保留 SPR、CPC/PPC竞价、商品数量、点击集中度及其他全部原字段。单行缺失留空并形成缺失清单，不填0、不估算、不按精确词重拉。
-7. 所有种子到达明确结束后，核对逐页行数、实际总行数、重复和缺失状态，生成主任务回传清单。
+1. 完整读取 `knowledge/index.md`、`../../../docs/keyword-judgment-boundaries.md` 和 `references/source-contract.md`，核对种子、站点、查询月份、分页参数、Pass上限和停止门。
+2. 每次`keyword.source.keyword-mining.query`固定传`returnFields=keyword,keywordCn,searchRank,searches`；每个代表种子从第1页开始、每页20条，连续到短页或空页结束。种子由主任务给定，本 Skill 不新增或替换。
+3. 每页返回后立即保存接口实际返回的完整响应、请求参数、页码、种子、Pass、站点、时间、声明总数/页数和四个业务字段；不在模型消息中展开逐页行。
+4. 每个种子至少执行两个版本化完整Pass。第二个Pass增加新机械键或出现键交换时最多执行第三个Pass；第三个Pass结束后不自动增加第四个Pass。声明总数/页数漂移只作证据，只要页码持续前进、返回可用、无整页重复/循环并能达到短页或空页，就继续当前Pass。
+5. 使用`keyword.source.sellersprite.paginate-and-verify`检查页码、实际行数、Pass间新增/交换、重复、循环、缺失和损失风险。持续错误只阻断受影响Pass，继续其他锁定种子；已取得数据仍进入工作簿并准确标记`partial`，不得因错误返回空来源。
+6. 原始页边界重复和同一机械键冲突在本机事件清单中全部保留。副任务按锁定种子/Pass/页/行顺序机械融合，一词一行；四字段冲突时以首次非空原值作展示，不平均、不估算，并在清单记录全部冲突来源。
+7. 在副任务目录装配业务工作簿，唯一业务Sheet只含`英文关键词、中文翻译、ABA月排名、月搜索量`四列。再生成Run相对路径、哈希、唯一词数、原始事件数、Pass/分页轨迹、缺失/冲突和损失状态清单；主任务只接收工作簿与该紧凑清单。
 
 ## 质量标准
 
-- 每个种子从第1页到明确结束，页码连续且原始页可回查。
+- 每个种子至少两个完整Pass；需要时最多三个，页码连续且原始页可回查。
 - 实际返回行数是闭环真值；声明总数漂移被记录。
 - 分页边界重复没有从原始证据中删除。
-- 全部字段保留，SPR和商品数量的缺失状态可识别。
+- MCP请求只含四个业务字段，工作簿也严格为四列；缺失与冲突状态可识别。
+- 主任务回传不展开逐页/逐行长响应，工作簿与清单的哈希、行数和路径可核验。
 - 不执行种子选择、三来源合并、语义过滤、竞争补拉或趋势查询。
 
 ## 异常处理
 
-明确报错、限流、结构异常、页数变化、缺页、整页重复、循环或无最后页时立即停止剩余页和种子，保留已取得数据作为排障证据并回传`MCP返回数据有误/blocked`。成功调用返回零结果时复核方法、站点和必填参数后形成新版本重试；未取得正常结果前不得标记完成。
+明确报错、限流、结构异常、缺页、整页重复、循环或无继续进展时停止受影响Pass，保留并装配已取得数据，再继续其他锁定种子。成功调用返回零结果时复核方法、站点和必填参数后形成新版本重试；只有所有锁定种子达到有界Pass完成门时才标记`complete_with_residual_risk`，部分结果必须准确标记`partial/blocked`。

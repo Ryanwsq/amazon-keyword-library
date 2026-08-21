@@ -2,24 +2,24 @@
 
 ## 业务场景
 
-第二板块 Sheet2、Sheet3、Sheet4 已锁定，需要按第三板块已确认结构生成核心词分类、二类词流量分类和否词候选结构。
+第二板块四Sheet已闭合，需要生成Sheet2动态语义分类、Sheet4流量分类和最小语义否词库。
 
 ## 负责的结果
 
-为 Sheet2 建立 F1–F5流量层、词性/词义多标签及 F5唯一长尾主分组标签和标签内 LT 过程表；为 Sheet4 建立独立二类词流量分类表；为 Sheet3 建立否词候选设计表并保留待确认状态。第三板块不读取 SKU 事实卡。
+增强Sheet2原十三列为四个固定分类列加N个品类自适应语义列；增强Sheet4原十二列为四个固定分类列；输出五列否词库并完成主键和人口质检。
 
 ## 使用时机
 
-第二板块版本、Sheet2/3/4 行数、稳定 `Keyword_ID`、ABA/搜索量字段、来源周期和分类版本均已锁定时使用；不用于采集、第二板块清洗、词频重算、竞争/趋势分析、广告资格或投放发布。
+第二板块版本、哈希、Sheet2/3/4人口、Keyword_ID、ABA和分类版本均锁定时使用。
 
 ## 可调用能力
 
 - `keyword.library.classify`
 - `keyword.classification.sheet2.apply`
 - `keyword.classification.sheet4.apply`
-- `keyword.classification.sheet3.prepare`
+- `keyword.classification.negative-library.build`
 - `keyword.classification.outputs.write-and-verify`
 
 ## 禁止事项与人工升级条件
 
-不得改写 Sheet2/3/4 身份，不得读取 SKU 事实卡或生成 SKU 匹配标签，不得把 F2“二级流量词”与 Sheet4“二类词”混用。F5必须保留多标签但只出现一次，并按固定优先级选择主分组标签后每20词拆组。无 ABA 时不伪造排名；任何精准/词组否定决策仍进入人工复核，不得把候选否词称为可直接投放结果。
+不得读取SKU事实卡、改变三去向、生成固定跨类目标签模板、给Sheet4完整语义列、输出否定匹配类型、广告资格或竞争/趋势结论。主键/人口不闭合时停止；ABA缺失和语义不稳时留准确状态，不伪造。
