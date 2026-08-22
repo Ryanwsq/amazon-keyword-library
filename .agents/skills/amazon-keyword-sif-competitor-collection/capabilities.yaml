@@ -19,3 +19,11 @@ capabilities:
     output: 版本化原始响应、七列明细工作簿、核心词候选摘要、来源清单、行数核对、哈希、异常和紧凑主任务回传
     permission: local-draft
     risk: 不覆盖旧响应；原始返回未落盘时不得继续汇总；主任务消息不得展开原始长响应
+  - id: keyword.source.competitor-traffic.web-query
+    type: manual
+    purpose: SIF MCP不可用时通过SIF网页浏览器执行相同直接竞品最近30天查询
+    status: planned
+    input: 站点、获准ASIN、最近30天口径、300条上限和浏览器证据目录
+    output: 查询条件、页面或导出原始证据、结果顺序、七列业务字段、数量闭环和入口状态
+    permission: approved-read
+    risk: 只允许同一SIF提供商；不得改变查询、字段或ASIN，无法证明入口间无遗漏重复时重新完整查询
