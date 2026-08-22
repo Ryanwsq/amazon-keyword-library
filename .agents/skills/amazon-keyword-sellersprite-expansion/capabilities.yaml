@@ -19,3 +19,11 @@ capabilities:
     output: 版本化原始页、实际行数闭环、四字段工作簿、重复/缺失/冲突/损失清单和紧凑主任务回传
     permission: local-draft
     risk: 不删除原始重复、不补0或精确词重拉；主任务回传不展开业务长响应；分页门失败时不得宣称完成
+  - id: keyword.source.sellersprite.web-query
+    type: manual
+    purpose: 卖家精灵MCP不可用时通过已登录网页执行相同四字段分页扩词
+    status: planned
+    input: 站点、查询月份、代表种子、Pass、页码、每页20条和网页证据目录
+    output: 查询条件、页面或导出原始证据、四字段结果、分页轨迹和入口状态
+    permission: approved-read
+    risk: 只允许同一卖家精灵提供商；不得改变种子、月份、字段或分页，无法证明入口间无遗漏重复时重新完整采集受影响Pass

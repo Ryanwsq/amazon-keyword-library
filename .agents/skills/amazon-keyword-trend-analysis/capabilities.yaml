@@ -6,12 +6,12 @@ skill:
 capabilities:
   - id: keyword.library.trend.analyze
     type: manual
-    purpose: 协调Sheet2 F1至F3至少24完整月的月度和季度环同比趋势输出
+    purpose: 协调Sheet2 F1至F3至少24完整月的月季矩阵和实际搜索量趋势图
     status: planned
     input: 锁定F1至F3人口、Keyword_ID、站点、最新完整月、批次和版本
     output: 单Sheet趋势工作簿、manifest、覆盖状态和质检结论
     permission: local-draft-and-verify
-    risk: 只用卖家精灵精确词月搜索量；不输出趋势标签或广告动作
+    risk: 同一Run只用一个锁定提供商的精确词月搜索量；不输出趋势标签或广告动作
   - id: keyword.trend.sellersprite.query
     type: mcp
     purpose: 为每个F1至F3完整词拉取至少24个已结束月份的卖家精灵月搜索量
@@ -22,9 +22,17 @@ capabilities:
     risk: 不用词根近义词或其他来源替代；月份无效不造值
   - id: keyword.trend.outputs.write-and-verify
     type: manual
-    purpose: 写入并验证关键词索引、12月和4季度矩阵以及两张百分比折线图
+    purpose: 写入并验证关键词索引、12月和4季度矩阵以及两张实际搜索量折线图
     status: planned
     input: F1至F3人口、至少24月数据、公式、版本和异常
     output: Sheet8品类关键词趋势性、manifest、公式渲染和序列闭环
     permission: local-draft-and-verify
-    risk: 缺月季度不求和；矩阵或图表不闭合时阻断
+    risk: 缺月季度不求和；环同比只留表格；矩阵或实际搜索量图不闭合时阻断
+  - id: keyword.trend.sorftime.query
+    type: mcp
+    purpose: 卖家精灵趋势不可用时为全部锁定F1至F3完整词拉取Sorftime精确词月搜索量
+    status: planned
+    input: 完整英文关键词、站点、锁定人口、最新完整月和获准批次
+    output: 逐词逐月原始响应、可解析月份、搜索量、覆盖范围和缺失状态
+    permission: external-read-authorized
+    risk: 一旦选用即覆盖同一Run全部关键词；不得与卖家精灵混源，不使用搜索排名或建议竞价字段

@@ -11,7 +11,7 @@ description: Count and rank non-preposition single words and adjacent ordered tw
 
 ## 输入
 
-锁定且已通过三去向闭环的第二板块工作簿、唯一Sheet2英文关键词列、输入哈希、词频规则版本、固定英语介词表版本和输出目录。
+锁定且已通过三去向闭环的第二板块工作簿、唯一Sheet2英文关键词列、输入哈希、词频规则版本、固定英语介词表版本`EN_PREP_CORE_V1`及其内容哈希和输出目录。`EN_PREP_CORE_V1`的唯一完整清单见`references/workbook-contract.md`；运行时不得增删、按上下文改判或用外部词典替换。
 
 ## 输出
 
@@ -23,9 +23,9 @@ description: Count and rank non-preposition single words and adjacent ordered tw
 
 ## 执行步骤
 
-1. 读取知识、判断边界和`references/workbook-contract.md`；锁定Sheet2人口、关键词列、哈希、规则版本和介词表版本。
+1. 读取知识、判断边界和`references/workbook-contract.md`；锁定Sheet2人口、关键词列、哈希、规则版本、`EN_PREP_CORE_V1`的48个唯一token及内容哈希。版本、数量、内容或哈希任一不一致即停止。
 2. 只读取非空Sheet2英文关键词。对统计副本执行NFKC和英文小写，以空白、标点和连字符分隔；不覆盖原词。
-3. 从单词序列删除固定介词；保留数字、冠词、连词、其他停用词和可识别非英语词面，除非它们属于介词表。
+3. 只从单词序列删除`EN_PREP_CORE_V1`中的精确token；保留数字、冠词`a/an/the`、连词`and/or`、`up/down/off/out/as/like`、其他停用词和可识别非英语词面。不得做上下文词性重判或多词介词识别。
 4. 单词频次只累计非介词token。
 5. 将介词作为硬断点，在每个连续非介词词段内部生成相邻有序双词；不跨介词、不统计非相邻、不交换顺序。
 6. 两表按次数降序、同次数词面字符升序；保留次数1。
@@ -35,11 +35,11 @@ description: Count and rank non-preposition single words and adjacent ordered tw
 ## 质量标准
 
 - 输入只来自Sheet2英文关键词，源工作簿不变。
-- 单词表无介词，双词不含介词且不跨介词。
+- 单词表不含`EN_PREP_CORE_V1`中的token，双词不含这些token且不跨这些断点；保留词不得因停用词或语境被额外删除。
 - 计数、排序和唯一词面可机械复算，次数1保留。
 - 输出不含ABA、搜索量、流量层、权重、竞争、趋势或广告结论。
 - Skill保持draft/planned，未完成真实三案例不称verified。
 
 ## 异常处理
 
-Sheet2/关键词列/哈希/介词表版本无法唯一锁定、主键人口不闭合、分词后异常、计数不闭合或渲染失败时停止并保留源文件。
+Sheet2/关键词列/哈希/介词表版本、48个唯一token或内容哈希无法唯一锁定，主键人口不闭合，发现白名单漂移、运行时词性重判、分词后异常、计数不闭合或渲染失败时停止并保留源文件。
